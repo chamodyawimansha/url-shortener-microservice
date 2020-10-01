@@ -1,0 +1,19 @@
+{
+  "name": "url-shortner",
+  "version": "1.0.0",
+  "description": "FreeCodeCamp API Project : URL Shortener Microservice",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chamodyawimansha/url-shortener-microservice.git"
+  },
+  "author": "chamodya wimansha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chamodyawimansha/url-shortener-microservice/issues"
+  },
+  "homepage": "https://github.com/chamodyawimansha/url-shortener-microservice#readme"
+}
