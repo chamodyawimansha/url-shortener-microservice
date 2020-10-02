@@ -4,7 +4,8 @@
   "description": "FreeCodeCamp API Project : URL Shortener Microservice",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js -e ejs,js,css,html,jpg,png,scss"
+    "start": "node server",
+    "dev": "nodemon server"
   },
   "dependencies": {
     "body-parser": "^1.19.0",

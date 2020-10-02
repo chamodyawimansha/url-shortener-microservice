@@ -16,7 +16,7 @@ var urlSchema = new Schema({
 });
 
 // Basic Configuration
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 8000;
 
 /** this project needs a db !! **/
 // mongoose.connect(
