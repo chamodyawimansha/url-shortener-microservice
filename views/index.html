@@ -1,19 +1,46 @@
 <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../public/styles.css" rel="stylesheet" />
+    <title>URL Shortener</title>
+  </head>
+  <body>
+    <div class="container">
+      <h2>API Project: URL Shortener Microservice</h2>
+
+      <h3>Short URL Creation</h3>
+      <p>
+        example: <code>POST [project_url]/api/shorturl/new</code> -
+        <code>https://www.google.com</code>
+      </p>
+      <form action="api/shorturl/new" method="POST">
+        <label for="url_input">URL to be shortened</label>
+        <input id="url_input" type="text" name="url" />
+        <input type="submit" value="POST URL" />
+      </form>
+      <h3>Example Usage:</h3>
+      <a href="https://url-shortener.freecodecamp.repl.co/api/shorturl/3">
+        [this_project_url]/api/shorturl/3
+      </a>
+      <h1>Design me</h1>
+      <h3>Will Redirect to:</h3>
+      <p>https://forum.freecodecamp.org/</p>
+      <div class="footer">
+        <p>by <a href="">Chamodya Wimansha</a></p>
+      </div>
+    </div>
+  </body>
+</html>
+
+<!-- <!DOCTYPE html>
 
 <html>
   <head>
     <title>URL Shortener</title>
-    <link
-      rel="shortcut icon"
-      href="https://cdn.hyperdev.com/us-east-1%3A52a203ff-088b-420f-81be-45bf559d01b1%2Ffavicon.ico"
-      type="image/x-icon"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Roboto"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <link href="/public/style.css" rel="stylesheet" type="text/css" />
+
+    <link href="/public/styles.css" rel="stylesheet" type="text/css" />
   </head>
 
   <body>
@@ -45,7 +72,7 @@
       <p>https://www.freecodecamp.org/forum/</p>
     </div>
     <div class="footer">
-      <p>by <a href="https://www.freecodecamp.org">freeCodeCamp</a></p>
+      <p>by <a href="">Chamodya wimansha</a></p>
     </div>
   </body>
-</html>
+</html> -->

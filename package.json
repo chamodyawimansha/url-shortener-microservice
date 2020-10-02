@@ -2,9 +2,17 @@
   "name": "url-shortner",
   "version": "1.0.0",
   "description": "FreeCodeCamp API Project : URL Shortener Microservice",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server.js -e ejs,js,css,html,jpg,png,scss"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongodb": "^3.3.3",
+    "mongoose": "^5.7.7",
+    "nodemon": "^2.0.4"
   },
   "repository": {
     "type": "git",
