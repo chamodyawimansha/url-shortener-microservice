@@ -1,35 +1,20 @@
-"use strict";
-
 var express = require("express");
-var mongo = require("mongodb");
-var mongoose = require("mongoose");
-var Schema = mongoose.Schema;
-var dns = require("dns");
-
+const dns = require("dns");
+const url = require("url");
 var cors = require("cors");
+var bodyParser = require("body-parser");
+require("dotenv").config();
+const mongoose = require("mongoose");
 
 var app = express();
 
-var urlSchema = new Schema({
-  url: String,
-  hash: String,
-});
-
 // Basic Configuration
-var port = process.env.PORT || 8000;
-
-/** this project needs a db !! **/
-// mongoose.connect(
-//   "mongodb+srv://db_user:xJS$50r3UzCB@cluster0.jgion.mongodb.net/apiTestDb?retryWrites=true&w=majority",
-//   { useNewUrlParser: true, useUnifiedTopology: true }
-// );
-// var db = mongoose.connection;
+const port = process.env.PORT;
 
 app.use(cors());
 
 /** this project needs to parse POST bodies **/
-// you should mount the body-parser here
-var bodyParser = require("body-parser");
+
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(
   bodyParser.urlencoded({
@@ -44,28 +29,31 @@ app.get("/", function (req, res) {
   res.sendFile(process.cwd() + "/views/index.html");
 });
 
-// your first API endpoint...
-app.get("/api/hello", function (req, res) {
-  res.json({ greeting: "hello API" });
-});
-
 app.post("/api/shorturl/new", function (req, res) {
-  // remove the http from the url
-  let url = req.body.url;
-  url = url.replace(/^https?:\/\//i, "");
+  // get the url from the request
+  let parsedUrl = url.parse(req.body.url);
 
-  // check if the url is correct or not
-  dns.lookup(url, (err) => {
-    if (err && err.code === "ENOTFOUND") {
-      res.json({ error: "invalid URL" });
+  if (parsedUrl.protocol === null) {
+    return res.json({ error: "invalid URL" });
+  }
+
+  dns.lookup(parsedUrl.hostname, (error, address) => {
+    if (address) {
+      mongoose.connect(process.env.DATABASE_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+
+      const db = mongoose.connection;
+      db.on("error", console.error.bind(console, "connection error:"));
+      db.once("open", function () {
+        res.send(parsedUrl.href);
+      });
+    } else {
+      //send the error message if the url is not correct
+      return res.json({ error: "invalid URL" });
     }
   });
-
-  db.once("open", function () {});
-
-  res.send("DB Connection Error");
-
-  //Save the url in the database
 });
 
 app.get("api/shorturl", function (req, res) {});
