@@ -11,10 +11,28 @@ var app = express();
 // Basic Configuration
 const port = process.env.PORT;
 
+const urlSchema = new mongoose.Schema({
+  uniqueIdentifier: String,
+  url: String,
+  shortUrl: String,
+});
+
+mongoose.connect(process.env.DATABASE_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+const db = mongoose.connection;
+
+db.on("error", () => {
+  return res.json({ error: "Database Error" });
+});
+
+const Url = mongoose.model("Url", urlSchema);
+
 app.use(cors());
 
 /** this project needs to parse POST bodies **/
-
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(
   bodyParser.urlencoded({
@@ -29,7 +47,7 @@ app.get("/", function (req, res) {
   res.sendFile(process.cwd() + "/views/index.html");
 });
 
-app.post("/api/shorturl/new", function (req, res) {
+app.post("/api/shorturl/new", async (req, res) => {
   // get the url from the request
   let parsedUrl = url.parse(req.body.url);
 
@@ -37,47 +55,36 @@ app.post("/api/shorturl/new", function (req, res) {
     return res.json({ error: "invalid URL" });
   }
 
-  dns.lookup(parsedUrl.hostname, (error, address) => {
-    if (address) {
-      mongoose.connect(process.env.DATABASE_URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
+  try {
+    let num = await Url.estimatedDocumentCount();
 
-      const db = mongoose.connection;
-
-      db.on("error", () => {
-        return res.json({ error: "Database Error" });
-      });
-
-      const urlSchema = new mongoose.Schema({
-        uniqueIdentifier: String,
-        url: String,
-      });
-
-      // db.once("open", () => {});
-      const Url = mongoose.model("Url", urlSchema);
-
-      const newUrl = new Url({
-        uniqueIdentifier: Date.now(),
-        url: parsedUrl.href,
-      });
-
-      newUrl.save((err) => {
-        if (err) {
-          return res.json({ error: "Database Error" });
-        }
-
-        return res.json({
-          original_url: newUrl.url,
-          short_url: newUrl.id,
+    dns.lookup(parsedUrl.hostname, (error, address) => {
+      if (address) {
+        const newUrl = new Url({
+          uniqueIdentifier: Date.now(),
+          url: parsedUrl.href,
+          shortUrl: num + 1,
         });
-      });
-    } else {
-      //send the error message if the url is not correct
-      return res.json({ error: "invalid URL" });
-    }
-  });
+
+        newUrl.save((error) => {
+          if (error) {
+            return res.json({ error: "Database Error" });
+          } else {
+            return res.json({
+              original_url: newUrl.url,
+              short_url: newUrl.shortUrl,
+            });
+          }
+        });
+      } else {
+        //send the error message if the url is not correct
+        return res.json({ error: "invalid URL" });
+      }
+    });
+  } catch (e) {
+    console.log(e);
+    return res.json({ error: "Database Error" });
+  }
 });
 
 app.get("api/shorturl", function (req, res) {});
