@@ -45,9 +45,33 @@ app.post("/api/shorturl/new", function (req, res) {
       });
 
       const db = mongoose.connection;
-      db.on("error", console.error.bind(console, "connection error:"));
-      db.once("open", function () {
-        res.send(parsedUrl.href);
+
+      db.on("error", () => {
+        return res.json({ error: "Database Error" });
+      });
+
+      const urlSchema = new mongoose.Schema({
+        uniqueIdentifier: String,
+        url: String,
+      });
+
+      // db.once("open", () => {});
+      const Url = mongoose.model("Url", urlSchema);
+
+      const newUrl = new Url({
+        uniqueIdentifier: "thisisatestuniqueIdentifier",
+        url: parsedUrl.href,
+      });
+
+      newUrl.save((err) => {
+        if (err) {
+          return res.json({ error: "Database Error" });
+        }
+
+        return res.json({
+          original_url: newUrl.url,
+          short_url: newUrl.id,
+        });
       });
     } else {
       //send the error message if the url is not correct
