@@ -59,7 +59,7 @@ app.post("/api/shorturl/new", function (req, res) {
       const Url = mongoose.model("Url", urlSchema);
 
       const newUrl = new Url({
-        uniqueIdentifier: "thisisatestuniqueIdentifier",
+        uniqueIdentifier: Date.now(),
         url: parsedUrl.href,
       });
 
