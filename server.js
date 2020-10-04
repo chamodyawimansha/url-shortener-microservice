@@ -87,7 +87,19 @@ app.post("/api/shorturl/new", async (req, res) => {
   }
 });
 
-app.get("api/shorturl", function (req, res) {});
+app.get("/api/shorturl/:url_id", function (req, res) {
+  var id = req.params.url_id;
+
+  Url.findOne({ shortUrl: id }, function (err, result) {
+    if (err) return console.error(err);
+
+    if (result) {
+      res.redirect(result.url);
+    } else {
+      res.redirect("/");
+    }
+  });
+});
 
 app.listen(port, function () {
   console.log("Node.js listening ...");
